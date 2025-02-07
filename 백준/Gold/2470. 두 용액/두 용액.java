@@ -15,7 +15,7 @@ public class Main {
 
 
     static int rLeft, rRight;
-    static Long sum = 1000000000L+1000000000L;
+    static Long sum = Long.MAX_VALUE;
 
 
 
