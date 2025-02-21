@@ -1,46 +1,65 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.StringTokenizer;
+import java.lang.reflect.Member;
+import java.util.*;
+
 
 public class Main {
 
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
+    static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        int N = Integer.parseInt(st.nextToken());
-        int M = Integer.parseInt(st.nextToken());
+    static int N, M;
+    static int [] arr;
+    //통장에서 K원을 인출
+    // 남은 금액이 그날 사용할 금액보다 많더라도 남은 금액은 통장에 집어넣고 다시 K원을 인출할 수 있다.
+    // 남은 금액이 600원 하루 사용할 금액이 500원이면 600원을 다시 통장에 넣는다.
+    static int binarySearch(int start , int end, int target) {
 
-        int[] A = new int[N];
+        // 100 100 101 300 400 400 500 sum = 1901
+        int result = end;
 
-        int low = 1, high = 1000000000;
-        for (int i = 0; i < N; i++) {
-            A[i] = Integer.parseInt(br.readLine());
-            low = Math.max(low, A[i]);
-        }
-
-        int answer = high;
-        while (low <= high) {
-            int mid = (low + high) / 2;
-
-            int count = 1;
-            int sum = A[0];
+        while (start <= end) {
+            int cnt = 1;
+            int mid = (start + end) / 2;
+            int k = arr[0];
             for (int i = 1; i < N; i++) {
-                if (sum + A[i] > mid) {
-                    count++;
-                    sum = 0;
+                if (k+arr[i] > mid) {
+                    // 만약 mid 즉 k원이 해당 요일에 인출 금액보다 작으면 다시 넣어야함
+                    cnt += 1;
+                    k = 0;
                 }
-                sum += A[i];
+                k += arr[i];
+
             }
 
-            if (count > M) {
-                low = mid + 1;
+            if (cnt <= target) {
+                result = Math.min(mid, result);
+                end = mid - 1;
             } else {
-                answer = Math.min(answer, mid);
-                high = mid - 1;
+                start = mid + 1;
             }
-        }
-        System.out.println(answer);
+         }
+
+        return result;
     }
+
+    public static void main(String[] args) throws IOException {
+
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
+        arr = new int[N];
+        int end = 0;
+        int start = 0;
+        for(int i=0; i<N; i++){
+            arr[i] = Integer.parseInt(br.readLine());
+            end +=arr[i];
+            start = Math.max(start, arr[i]);
+        }
+        System.out.println(binarySearch(start, end, M));
+    }
+
+
+
 }
