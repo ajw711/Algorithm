@@ -1,8 +1,8 @@
 import java.util.*;
-
 class Solution {
     
-    static void dfs(int depth, int[][] computers, boolean[] visited){
+    private void dfs(int depth, int[][] computers, boolean[] visited){
+        
         visited[depth] = true;
         
         for(int i=0; i<computers.length; i++){
@@ -15,14 +15,12 @@ class Solution {
     public int solution(int n, int[][] computers) {
         int answer = 0;
         boolean[] visited = new boolean[n];
-        
         for(int i=0; i<n; i++){
             if(!visited[i]){
                 dfs(i, computers, visited);
                 answer++;
             }
         }
-        
         return answer;
     }
 }
